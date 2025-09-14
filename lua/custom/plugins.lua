@@ -4,7 +4,9 @@ local plugins = {
     opts = {
       ensure_installed = {
         "clangd",
+        "neocmakelsp",
         "pyright",
+        "lua-language-server"
       }
     }
   },

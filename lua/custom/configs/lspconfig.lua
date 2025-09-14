@@ -22,3 +22,13 @@ lspconfig.pyright.setup({
   filetypes = {"python"},
 })
 
+lspconfig.neocmake.setup({
+  on_attach = on_attach,
+  capabilities = capabilities
+})
+
+lspconfig.lua_ls.setup({
+  on_attach = on_attach,
+  capabilities = capabilities
+})
+
