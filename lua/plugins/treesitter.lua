@@ -4,8 +4,8 @@ return {
     opts = {
       ensure_installed = {
         "c",
-        "c++",
-        "cs",
+        "cpp",
+        "c_sharp",
         "bash",
         "html",
         "javascript",
@@ -20,6 +20,8 @@ return {
         "typescript",
         "vim",
         "yaml",
+        "css",
+        "scss"
       },
     },
     lazy = false,
