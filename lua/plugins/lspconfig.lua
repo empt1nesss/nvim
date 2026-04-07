@@ -5,7 +5,6 @@ return {
       clangd = {},
       pyright = {},
       omnisharp = {},
-      neocmake = {},
     },
   },
 }
