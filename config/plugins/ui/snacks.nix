@@ -18,9 +18,30 @@
     };
   };
 
+  keymaps = [
+    {
+      mode = "n";
+      key = "<leader>/";
+      action.__raw = ''
+        function()
+          Snacks.picker.grep({
+            cwd = vim.fn.getcwd(),
+            hidden = true,
+          })
+        end
+      '';
+      options = {
+        desc = "Grep project";
+        silent = true;
+      };
+    }
+  ];
+
   extraPackages = with pkgs; [
     imagemagick
     ghostscript
     ffmpeg
+    ripgrep
+    fd
   ];
 }

@@ -47,14 +47,8 @@
         ];
         lualine_c = [
           {
-            __unkeyed-1 = "diagnostics";
-            sources = [ "nvim_lsp" ];
-            symbols = {
-              error = " ";
-              warn = " ";
-              info = " ";
-              hint = "󰝶 ";
-            };
+            __unkeyed-1 = "filename";
+            path = 1;
           }
           {
             __unkeyed-1 = "navic";
@@ -69,8 +63,30 @@
             end
           '')
           {
-            __unkeyed-1 = lib.nixvim.mkRaw "require('vcs_status').forges";
-            icon = "󰛳";
+            __unkeyed-1 = "diagnostics";
+            sources = [ "nvim_diagnostic" ];
+            sections = [
+              "error"
+              "warn"
+              "info"
+              "hint"
+            ];
+            symbols = {
+              error = " ";
+              warn = " ";
+              info = " ";
+              hint = "󰌵 ";
+            };
+            colored = true;
+            always_visible = false;
+          }
+          {
+            __unkeyed-1 = "encoding";
+            fmt = lib.nixvim.mkRaw ''
+              function(str)
+                return str:upper()
+              end
+            '';
           }
           {
             __unkeyed-1 = "filetype";
@@ -81,10 +97,6 @@
               right = 0;
             };
           }
-          {
-            __unkeyed-1 = "filename";
-            path = 1;
-          }
         ];
         lualine_y = [
           {
@@ -92,6 +104,7 @@
           }
         ];
         lualine_z = [
+          "selectioncount"
           {
             __unkeyed-1 = "location";
           }

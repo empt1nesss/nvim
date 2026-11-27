@@ -2,21 +2,15 @@
   plugins.gitsigns = {
     enable = true;
     settings = {
-      preview_config = {
-        border = "rounded";
-      };
       signcolumn = true;
-      signs_staged_enable = false;
-      # Both staged and unstaged changes use the same single-cell line glyph.
       signs = {
-        add.text = "┃ ";
-        change.text = " ┃";
-        untracked.text = "┆ ";
-        delete.text = " ";
-        topdelete.text = "󱂥 ";
-        changedelete.text = "󱂧 ";
+        # add.text = "▎";
+        # change.text = "▎";
+        # changedelete.text = "▎";
+        # untracked.text = "▎";
+        delete.text = "";
+        topdelete.text = "";
       };
-      word_diff = false;
     };
   };
 

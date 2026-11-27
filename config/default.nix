@@ -35,6 +35,7 @@ _: {
     ./plugins/ui/lualine.nix
     ./plugins/ui/dashboard.nix
     ./plugins/ui/snacks.nix
+    ./plugins/ui/statuscol.nix
 
     # LSP and formatting
     ./plugins/lsp/lsp.nix

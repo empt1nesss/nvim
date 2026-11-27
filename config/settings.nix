@@ -1,17 +1,21 @@
 { pkgs, ... }:
 {
   config = {
-    extraConfigLuaPre =
-      # lua
-      ''
-        vim.fn.sign_define("diagnosticsignerror", { text = " ", texthl = "diagnosticerror", linehl = "", numhl = "" })
-        vim.fn.sign_define("diagnosticsignwarn", { text = " ", texthl = "diagnosticwarn", linehl = "", numhl = "" })
-        vim.fn.sign_define("diagnosticsignhint", { text = "󰌵", texthl = "diagnostichint", linehl = "", numhl = "" })
-        vim.fn.sign_define("diagnosticsigninfo", { text = " ", texthl = "diagnosticinfo", linehl = "", numhl = "" })
-        if vim.env.SSH_TTY or vim.env.SSH_CONNECTION then
-          vim.g.clipboard = "osc52"
-        end
-      '';
+    extraConfigLuaPre = ''
+      vim.diagnostic.config({
+        signs = {
+          text = {
+            [vim.diagnostic.severity.ERROR] = "",
+            [vim.diagnostic.severity.WARN]  = "",
+            [vim.diagnostic.severity.INFO]  = "",
+            [vim.diagnostic.severity.HINT]  = "󰌵",
+          },
+        },
+        virtual_text = false,
+        underline = true,
+        severity_sort = true,
+      })
+    '';
     extraConfigLua = ''
       vim.opt.incsearch = true
       vim.opt.hlsearch = true
@@ -138,6 +142,14 @@
       fillchars = {
         eob = " ";
       };
+
+      signcolumn = "auto";
+      numberwidth = 2;
+      foldcolumn = "0";
+      encoding = "utf-8";
+      fileencodings = "ucs-bom,utf-8,cp866";
+      undofile = true;
+      undolevels = 1000;
     };
   };
 }

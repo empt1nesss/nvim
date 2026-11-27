@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ pkgs, lib, ... }:
 let
   reviewLua = # lua
     ''
@@ -77,6 +77,35 @@ let
         end)
       end, { desc = "Review branch commits in chronological order" })
     '';
+  codediffWatcher = pkgs.stdenv.mkDerivation {
+    pname = "codediff-watcher";
+    version = "0.23.2";
+
+    src = pkgs.fetchurl {
+      url = "https://github.com/esmuellert/codediff/releases/download/v0.23.2/codediff-watcher-0.23.2-linux-x64.tar.gz";
+      hash = "sha256-acXsKVZCUZ952p57kIkK0TLw/YDiiD9v9pZxBqAF27w=";
+    };
+
+    nativeBuildInputs = [
+      pkgs.autoPatchelfHook
+    ];
+
+    buildInputs = [
+      pkgs.stdenv.cc.cc.lib
+    ];
+
+    dontUnpack = true;
+
+    installPhase = ''
+      runHook preInstall
+
+      mkdir -p "$out/bin"
+      tar -xzf "$src" -C "$out/bin"
+      chmod +x "$out/bin/codediff-watcher"
+
+      runHook postInstall
+    '';
+  };
 in
 {
   plugins.codediff = {
@@ -157,4 +186,13 @@ in
       };
     }
   ];
+
+  extraPackages = [
+    codediffWatcher
+  ];
+
+  extraConfigLuaPre = ''
+    vim.env.CODEDIFF_WATCHER_PATH =
+      "${codediffWatcher}/bin/codediff-watcher"
+  '';
 }

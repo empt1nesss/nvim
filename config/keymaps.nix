@@ -1,3 +1,4 @@
+{ lib, ... }:
 {
   globals.mapleader = " ";
 
@@ -523,6 +524,26 @@
         desc = "Decrease indent";
         silent = true;
       };
+    }
+    {
+      mode = "n";
+      key = "<leader>b";
+      action = lib.nixvim.mkRaw ''
+        function()
+          require("telescope.builtin").buffers({
+            sort_mru = true,
+            ignore_current_buffer = false,
+            previewer = false,
+          })
+        end
+      '';
+      options.desc = "Open buffers";
+    }
+    {
+      mode = "n";
+      key = "<leader>f";
+      action = "<cmd>Neotree focus filesystem left<CR>";
+      options.desc = "Focus Neo-tree";
     }
   ];
 }
