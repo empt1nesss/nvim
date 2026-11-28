@@ -3,7 +3,36 @@
     do
       local api = vim.api
       local ns = api.nvim_create_namespace("nvim.multicursor")
+      local active_ns = api.nvim_create_namespace("custom.multicursor.active")
       local state = nil
+
+      api.nvim_set_hl(0, "MultiCursorActiveMatch", {
+        bg = "#A52A3A",
+        fg = "#FFFFFF",
+        bold = true,
+      })
+
+      local function highlight_current()
+        api.nvim_buf_clear_namespace(0, active_ns, 0, -1)
+
+        if not state then
+          return
+        end
+
+        local current = state.positions[#state.positions]
+
+        api.nvim_buf_set_extmark(
+          0,
+          active_ns,
+          current.row - 1,
+          current.col,
+          {
+            end_col = current.col + #state.first.text,
+            hl_group = "MultiCursorActiveMatch",
+            priority = 250,
+          }
+        )
+      end
 
       local function update_counter()
         if state then
@@ -21,6 +50,8 @@
 
       local function clear()
         api.nvim_buf_clear_namespace(0, ns, 0, -1)
+        api.nvim_buf_clear_namespace(0, active_ns, 0, -1)
+
         state = nil
         update_counter()
       end
@@ -135,33 +166,6 @@
         return nil
       end
 
-      local function rebuild_cursors()
-        -- Recreate native cursors at the beginnings
-        -- of all selected matches.
-        api.nvim_buf_clear_namespace(0, ns, 0, -1)
-
-        -- The first match is the primary cursor.
-        local first = state.positions[1]
-
-        api.nvim_win_set_cursor(0, {
-          first.row,
-          first.col,
-        })
-
-        -- All other matches become native multicursors.
-        for i = 2, #state.positions do
-          local pos = state.positions[i]
-
-          api.nvim_buf_set_extmark(
-            0,
-            ns,
-            pos.row - 1,
-            pos.col,
-            {}
-          )
-        end
-      end
-
       local function add_next()
         if state and (
           state.buf ~= api.nvim_get_current_buf()
@@ -197,20 +201,25 @@
         })
 
         update_counter()
+        highlight_current()
 
-        rebuild_cursors()
         return true
       end
 
-      -- Visual: add next match and reselect all matches.
-      -- gn works at every native cursor.
       vim.keymap.set("x", "<C-d>", function()
-        if add_next() then
-          return "<Esc>gn"
+        if not add_next() then
+          return
         end
-        return ""
+
+        local keys = api.nvim_replace_termcodes(
+          "v1Q<Esc>ngn<Esc>1q=gv",
+          true,
+          false,
+          true
+        )
+
+        api.nvim_feedkeys(keys, "nt", false)
       end, {
-        expr = true,
         desc = "Multicursor: select next occurrence",
       })
 
